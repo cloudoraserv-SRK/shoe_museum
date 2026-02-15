@@ -2,7 +2,7 @@ import { supabase } from "./admin/supabaseClient.js";
 
 const BRANDS = [
   { id: "dce9420f-a42c-4732-a3c6-577ca05c0c91", target: "libertyProducts" },
-  { id: "088b3745-49c1-4758-94ee-89620865a9d2", target: "woodlandProducts" },
+  { id: "088b3745-49c4-4758-94ee-89620865a9d2", target: "woodlandProducts" },
   { id: "6e499e55-a97e-4904-a2a3-328f83e6155d", target: "pierreCardinProducts" },
   { id: "c292b420-168e-468f-a6f2-21d57e5d0f3a", target: "redTapeProducts" },
   { id: "7baeefbc-deb0-4fc4-92f5-189fa87af30a", target: "medifeetProducts" }
@@ -55,7 +55,6 @@ async function loadBrand(brandId, targetId) {
       const { data } = supabase.storage
         .from("products")
         .getPublicUrl(variant.image_gallery[0]);
-
       img = data.publicUrl;
     }
 
@@ -64,6 +63,16 @@ async function loadBrand(brandId, targetId) {
         <img src="${img}" alt="${p.name}">
         <h4>${p.name}</h4>
         <p class="desc">${p.short_description || ""}</p>
+
+        <select class="size-select">
+          <option value="">Select Size</option>
+          <option value="6">6</option>
+          <option value="7">7</option>
+          <option value="8">8</option>
+          <option value="9">9</option>
+          <option value="10">10</option>
+        </select>
+
         <div class="card-footer">
           <span class="price">₹${p.price}</span>
           <button class="add-btn"
@@ -84,25 +93,40 @@ async function loadBrand(brandId, targetId) {
     });
   });
 
-  /* Add to cart */
+  /* Add to cart with size validation */
   container.querySelectorAll(".add-btn").forEach(btn => {
     btn.addEventListener("click", e => {
       e.stopPropagation();
-      addToCart(btn.dataset.id, btn.dataset.name, +btn.dataset.price);
+
+      const card = btn.closest(".product-card");
+      const size = card.querySelector(".size-select").value;
+
+      if (!size) {
+        alert("Please select size");
+        return;
+      }
+
+      addToCart(
+        btn.dataset.id,
+        btn.dataset.name,
+        +btn.dataset.price,
+        size
+      );
     });
   });
 }
 
 /* ================= CART ================= */
 
-function addToCart(id, name, price) {
+function addToCart(id, name, price, size) {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const existing = cart.find(i => i.id === id);
+
+  const existing = cart.find(i => i.id === id && i.size === size);
 
   if (existing) {
     existing.qty++;
   } else {
-    cart.push({ id, name, price, qty: 1 });
+    cart.push({ id, name, price, size, qty: 1 });
   }
 
   localStorage.setItem("cart", JSON.stringify(cart));
