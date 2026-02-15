@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Shoe Museum | Branded Shoes at Best Prices</title>
+  <meta name="description" content="100% original branded shoes at best prices. Casual, formal & sports footwear." />
+
+  <!-- OG (update later) -->
+  <meta property="og:title" content="Shoe Museum | Best Deals on Branded Shoes" />
+  <meta property="og:description" content="Premium branded footwear at unbeatable prices." />
+  <meta property="og:image" content="assets/og/home.jpg" />
+
+  <!-- Favicon -->
+  <link rel="icon" href="assets/favicon/favicon.ico" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./checkout.css" />
+  <link rel="stylesheet" href="../main.css"/>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="site-header">
+  <nav class="nav">
+<a href="index.html" class="logo">
+      <img src="../assets/images/logo.jpeg" alt="Shoe Museum">
+      <span>Shoe Museum</span>
+    </a>
+       <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="#contact">Contact us</a></li>
+      <li><a href="./index.html">All Shoes</a></li>
+      </li>
+    </ul>
+  </nav>
+
+</header>
+<!-- ================= CHECKOUT ================= -->
+<main class="checkout">
+  <div class="checkout-container">
+
+    <h1>Secure Checkout</h1>
+
+    <!-- ================= ORDER SUMMARY ================= -->
+    <div class="checkout-box">
+      <h3>Order Summary</h3>
+
+      <div id="orderSummary" class="order-summary">
+        <!-- JS will inject items -->
+      </div>
+
+      <div class="total-row">
+        <span>Total Amount</span>
+        <strong id="orderTotal">₹0</strong>
+      </div>
+    </div>
+
+    <!-- ================= CUSTOMER DETAILS ================= -->
+    <div class="checkout-box">
+      <h3>Customer Details</h3>
+
+      <input type="text" id="customerName" placeholder="Full Name" required>
+
+      <input type="email" id="customerEmail" placeholder="Email Address" required>
+
+      <input type="tel" id="customerPhone" placeholder="Mobile Number" required>
+
+      <textarea id="customerAddress" placeholder="Full Delivery Address" required></textarea>
+
+      <input type="text" id="customerCity" placeholder="City" required>
+
+      <input type="text" id="customerPincode" placeholder="Pincode" required>
+    </div>
+
+    <!-- ================= PAYMENT DETAILS ================= -->
+    <div class="checkout-box">
+      <h3>Payment Details</h3>
+
+      <!-- Cashfree required hidden fields -->
+      <input type="hidden" id="orderId">
+      <input type="hidden" id="orderAmount">
+      <input type="hidden" id="orderCurrency" value="INR">
+
+      <p class="secure-note">
+        You will be redirected to Cashfree to complete payment securely.
+      </p>
+    </div>
+
+    <!-- ================= PLACE ORDER ================= -->
+    <button id="payNowBtn" class="checkout-btn">
+      Pay Securely
+    </button>
+
+  </div>
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer" id="contact">
+
+
+  <div class="footer-container footer-grid">
+
+    <!-- BRAND -->
+    <div class="footer-col brand">
+      <h3>Shoe Museum</h3>
+      <h1>BRANDED SHOES<br>BEST PRICES</h1>
+      <p>Heavy discounts on original branded footwear.</p>
+
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="#why">Why Us</a></li>
+        <li><a href="#categories">Categories</a></li>
+        <li><a href="#featured">Products</a></li>
+        <li><a href="./index.html">Shop</a></li>
+      </ul>
+    </div>
+
+    <!-- LEGAL -->
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms & Conditions</a></li>
+        <li><a href="#">Shipping & Returns</a></li>
+      </ul>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul class="contact-list">
+        <li>📞 <a href="tel:+917022858889">+91 70228-58889</a></li>
+        <li>📧 <a href="mailto:hello@secretsanctuary.in">Shoemuseumonline@gmail.com</a></li>
+        <li>💬 <a href="https://wa.me/917022858889" target="_blank">WhatsApp Us</a></li>
+      </ul>
+    </div>
+
+    <!-- PARTNER / BULK ENQUIRY -->
+    <div class="footer-col enquiry">
+      <h4>Bulk Orders / Partner With Us</h4>
+
+<form class="enquiry-form" id="enquiryForm">
+  <input name="name" required placeholder="Your Name">
+  <input name="email" required type="email" placeholder="Email Address">
+  <input name="city" required placeholder="City">
+  <input name="phone" required placeholder="Phone Number">
+
+  <select name="enquiry_type" required>
+    <option value="" disabled selected>Your Enquiry</option>
+    <option value="Bulk Orders">Bulk Orders</option>
+    <option value="Partnership">Partnership</option>
+  </select>
+
+  <button type="submit">Send Enquiry</button>
+</form>
+
+
+<iframe name="hidden_iframe" style="display:none;"></iframe>
+
+    </div>
+
+  </div>
+
+  <!-- FOOTER BOTTOM -->
+  <div class="footer-bottom">
+    <span>© 1991 Shoe Museum. All rights reserved.</span>
+  </div>
+
+</footer>
+<script type="module" src="../script.js"></script>
+<script>
+/* =========================
+   LOAD CART
+========================= */
+// LOAD CART
+const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+const orderSummary = document.getElementById("orderSummary");
+const orderTotal = document.getElementById("orderTotal");
+const payBtn = document.getElementById("payNowBtn");
+
+let total = 0;
+
+// RENDER SUMMARY
+cart.forEach(item => {
+  const row = document.createElement("div");
+  row.className = "order-item";
+  row.innerHTML = `
+    <span>${item.name} × ${item.qty}</span>
+    <span>₹${item.price * item.qty}</span>
+  `;
+  orderSummary.appendChild(row);
+  total += item.price * item.qty;
+});
+
+orderTotal.innerText = `₹${total}`;
+
+// PAY BUTTON
+payBtn.addEventListener("click", async () => {
+  const name = document.getElementById("customerName").value.trim();
+  const email = document.getElementById("customerEmail").value.trim();
+  const phone = document.getElementById("customerPhone").value.trim();
+  const address = document.getElementById("customerAddress").value.trim();
+  const city = document.getElementById("customerCity").value.trim();
+  const pincode = document.getElementById("customerPincode").value.trim();
+
+  if (!name || !email || !phone || !address || !city || !pincode) {
+    alert("Please fill all details");
+    return;
+  }
+
+  // 🔒 BACKEND INTEGRATION POINT
+  // POST to backend → create Cashfree order
+  // backend returns payment_session_id
+
+  /*
+  const res = await fetch("/api/create-cashfree-order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      customer: { name, email, phone, address, city, pincode },
+      amount: total,
+      cart
+    })
+  });
+  const { payment_session_id } = await res.json();
+  */
+
+  // 🔁 TEMP PLACEHOLDER
+  alert("Cashfree integration ready. Backend connect pending.");
+
+  // AFTER BACKEND:
+  // Cashfree.checkout({ paymentSessionId: payment_session_id });
+});
+
+</script>
+
+<script type="module" src="../script.js"></script>
+</body>
+</html>
+

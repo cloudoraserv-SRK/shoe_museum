@@ -1,0 +1,46 @@
+.brand-page {
+  padding: 24px;
+}
+
+.brand-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.brand-form input {
+  padding: 8px;
+  width: 220px;
+}
+
+.brand-form button {
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.brand-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.brand-table th,
+.brand-table td {
+  border: 1px solid #e5e5e5;
+  padding: 10px;
+}
+
+.brand-table th {
+  background: #f7f7f7;
+}
+
+.actions button {
+  margin-right: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.actions .danger {
+  background: #ffecec;
+  border: 1px solid #f5b5b5;
+}
