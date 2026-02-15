@@ -42,54 +42,108 @@ body {
 ========================= */
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 30px;
 }
 
-/* =========================
-   PRODUCT CARD
-========================= */
+/* CARD */
 .product-card {
-  text-decoration: none;
-  color: inherit;
   background: #fff;
-  border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 16px;
+  padding: 18px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
-  transition: transform .25s ease, box-shadow .25s ease;
+  transition: all .3s ease;
 }
 
 .product-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 40px rgba(0,0,0,.12);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.12);
 }
 
 /* IMAGE */
 .product-card img {
   width: 100%;
-  height: 180px;
+  height: 220px;
   object-fit: contain;
-  margin-bottom: 14px;
-  background: var(--light-gray);
+  background: #f8f8f8;
   border-radius: 14px;
   padding: 12px;
+  margin-bottom: 12px;
+  transition: transform .3s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.05);
+}
+
+/* BRAND */
+.product-card .brand {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #888;
+  letter-spacing: 1px;
 }
 
 /* TITLE */
 .product-card h3 {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin: 4px 0 8px;
   line-height: 1.4;
 }
 
 /* PRICE */
-.product-card span {
-  font-size: 15px;
-  font-weight: 700;
+.price-box {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
 }
+
+.mrp {
+  text-decoration: line-through;
+  color: #aaa;
+  font-size: 13px;
+}
+
+.offer {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+/* DESCRIPTION */
+.product-card .desc {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 10px;
+  min-height: 40px;
+}
+
+/* SIZE SELECT */
+.size-select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 8px;
+}
+
+/* BUTTON */
+.add-cart-btn {
+  background: #000;
+  color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.add-cart-btn:hover {
+  background: #333;
+}
+
 
 /* =========================
    HOVER EFFECT
@@ -214,4 +268,74 @@ body {
   .product-card img {
     padding: 8px;
   }
+}
+.product-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.product-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.brand {
+  font-size: 13px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.price-box {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.mrp {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.offer {
+  font-weight: bold;
+  color: #000;
+}
+
+.size-select {
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.add-cart-btn {
+  background: black;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add-cart-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.color-badge {
+  background: #eee;
+  padding: 4px 8px;
+  margin-right: 5px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+.product-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }

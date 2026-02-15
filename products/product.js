@@ -12,6 +12,7 @@ const productDesc = document.getElementById("productDesc");
 const productPrice = document.getElementById("productPrice");
 const productMrp = document.getElementById("productMrp");
 const longDesc = document.getElementById("longDesc");
+const productBrand = document.getElementById("productBrand");
 
 /* SLUG */
 const slug = new URLSearchParams(location.search).get("slug");
@@ -24,17 +25,22 @@ let selectedSize = null;
 
 /* LOAD PRODUCT */
 async function loadProduct() {
-  const { data: product } = await supabase
+  const { data: product, error } = await supabase
     .from("products")
-    .select("*")
+    .select(`
+      *,
+      brands!products_brand_id_fkey ( name )
+    `)
     .eq("slug", slug)
     .eq("active", true)
     .single();
 
-  if (!product) return;
+  if (error || !product) return;
 
   productId = product.id;
+
   productName.textContent = product.name;
+  productBrand.textContent = product.brands?.name || "";
   productDesc.textContent = product.short_description || "";
   productPrice.textContent = `₹${product.price}`;
   productMrp.textContent = product.mrp ? `₹${product.mrp}` : "";
@@ -56,9 +62,10 @@ async function loadVariants() {
     .eq("product_id", productId);
 
   variants = data || [];
+  if (!variants.length) return;
+
   renderColors();
 
-  // ✅ FIX: pick first variant WITH images
   const withImages = variants.find(
     v => Array.isArray(v.image_gallery) && v.image_gallery.length
   );
@@ -98,20 +105,26 @@ function renderImages(images) {
   thumbs.innerHTML = "";
 
   if (!images.length) {
-    galleryMain.textContent = "No image";
+    galleryMain.textContent = "No image available";
     return;
   }
 
   images.forEach((path, i) => {
-    const url = supabase.storage.from("products")
-      .getPublicUrl(path).data.publicUrl;
+    const { data } = supabase.storage
+      .from("products")
+      .getPublicUrl(path);
+
+    const url = data.publicUrl;
 
     if (i === 0) galleryMain.innerHTML = `<img src="${url}">`;
 
-    const t = document.createElement("img");
-    t.src = url;
-    t.onclick = () => galleryMain.innerHTML = `<img src="${url}">`;
-    thumbs.appendChild(t);
+    const img = document.createElement("img");
+    img.src = url;
+    img.onclick = () => {
+      galleryMain.innerHTML = `<img src="${url}">`;
+    };
+
+    thumbs.appendChild(img);
   });
 }
 
@@ -129,7 +142,9 @@ async function loadSizes(variantId) {
     if (s.stock <= 0) return;
 
     const btn = document.createElement("button");
+    btn.className = "size";
     btn.textContent = s.size;
+
     btn.onclick = () => {
       document.querySelectorAll(".size")
         .forEach(b => b.classList.remove("active"));
@@ -137,7 +152,6 @@ async function loadSizes(variantId) {
       selectedSize = s.size;
     };
 
-    btn.className = "size";
     sizes.appendChild(btn);
   });
 }
@@ -150,24 +164,35 @@ function addToCart() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
   const key = `${productId}_${currentVariant.id}_${selectedSize}`;
 
-  const img = currentVariant.image_gallery?.[0]
-    ? supabase.storage.from("products")
-        .getPublicUrl(currentVariant.image_gallery[0]).data.publicUrl
-    : "";
+  let img = null;
+
+if (currentVariant?.image_gallery?.[0]) {
+  const { data } = supabase.storage
+    .from("products")
+    .getPublicUrl(currentVariant.image_gallery[0]);
+
+  img = data?.publicUrl || null;
+}
+
 
   const found = cart.find(i => i.key === key);
+
   if (found) found.qty++;
-  else cart.push({
-    key,
-    product_id: productId,
-    variant_id: currentVariant.id,
-    name: productName.textContent,
-    color: currentVariant.color_name,
-    size: selectedSize,
-    image: img,
-    price: Number(productPrice.textContent.replace("₹","")),
-    qty: 1
-  });
+  else {
+   cart.push({
+  key,
+  product_id: productId,
+  variant_id: currentVariant.id,
+  name: productName.textContent,
+  brand: productBrand.textContent,
+  color: currentVariant.color_name || "N/A",
+  size: selectedSize,
+  image: img,   // now always full URL or null
+  price: Number(productPrice.textContent.replace("₹", "")),
+  qty: 1
+});
+
+  }
 
   localStorage.setItem("cart", JSON.stringify(cart));
   updateCartCount();
@@ -177,12 +202,58 @@ function addToCart() {
 function updateCartCount() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
   const el = document.getElementById("cartCount");
-  if (el) el.textContent = cart.reduce((s,i)=>s+i.qty,0);
+  if (el) el.textContent = cart.reduce((s, i) => s + i.qty, 0);
 }
 
+/* COLOR MAP */
 function mapColor(c) {
   return {
-    black:"#000", brown:"#8B4513", tan:"#D2B48C",
-    white:"#fff", beige:"#f5f5dc", grey:"#999"
+    black: "#000",
+    brown: "#8B4513",
+    tan: "#D2B48C",
+    white: "#fff",
+    beige: "#f5f5dc",
+    grey: "#999"
   }[c?.toLowerCase()] || "#ccc";
 }
+
+/* DELIVERY CHECK */
+document.getElementById("checkDeliveryBtn").onclick = async () => {
+  const pin = document.getElementById("pincodeInput").value.trim();
+  const result = document.getElementById("deliveryResult");
+
+  if (pin.length !== 6) {
+    result.textContent = "Enter valid 6 digit pincode";
+    result.className = "delivery-result error";
+    return;
+  }
+
+  result.textContent = "Checking...";
+  result.className = "delivery-result";
+
+  try {
+    const res = await fetch(`/api/check-delivery?pincode=${pin}`);
+    const data = await res.json();
+
+    if (!data.serviceable) {
+      result.textContent = "Delivery not available in this area";
+      result.className = "delivery-result error";
+      return;
+    }
+
+    const today = new Date();
+    today.setDate(today.getDate() + data.estimated_days);
+
+    result.innerHTML = `
+      🚚 Delivery by <b>${today.toDateString()}</b><br>
+      ${data.cod_available ? "💵 COD Available" : "❌ COD Not Available"}<br>
+      ${data.estimated_days <= 4 ? "Free Shipping" : "Shipping ₹99"}
+    `;
+
+    result.className = "delivery-result success";
+  } catch {
+    result.textContent = "Unable to check delivery";
+    result.className = "delivery-result error";
+  }
+};
+localStorage.removeItem("cart")

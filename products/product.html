@@ -60,6 +60,7 @@
 
   <!-- RIGHT : INFO -->
   <section class="product-info">
+<div id="productBrand"></div>
 
     <h1 id="productName">Loading...</h1>
 
@@ -71,6 +72,17 @@
         <span id="productMrp"></span>
         <span id="productPrice" class="price">₹0</span>
       </div>
+      <div class="delivery-box">
+  <h4>Check Delivery</h4>
+
+  <div class="delivery-input">
+    <input type="text" id="pincodeInput" placeholder="Enter Pincode">
+    <button id="checkDeliveryBtn">Check</button>
+  </div>
+
+  <p id="deliveryResult" class="delivery-result"></p>
+</div>
+
       <button id="addToCartBtn">Add to Cart</button>
     </div>
 
@@ -102,12 +114,15 @@
 </main>
 
 <!-- ================= RELATED PRODUCTS ================= -->
-<section id="related" class="related-section">
+<section class="related-section">
   <h2>You may also like</h2>
-  <div id="relatedGrid" class="related-grid">
-    <!-- JS will inject .related-card items here -->
-  </div>
+  <div id="relatedGrid" class="related-grid"></div>
+
+  <button id="loadMoreRelated" class="load-more-btn">
+    Load More
+  </button>
 </section>
+
 
 <!-- ================= FOOTER ================= -->
 <footer class="footer" id="contact">
