@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bulk Product Upload</title>
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="bulk-upload.css">
+</head>
+<body>
+
+<h2>Bulk Product Upload (Excel)</h2>
+
+<input type="file" id="excelFile" accept=".xlsx,.xls">
+<button id="previewBtn">Preview</button>
+<button id="uploadBtn">Upload</button>
+
+<progress id="progress" value="0" max="100"></progress>
+<pre id="log"></pre>
+
+<div class="table-wrap">
+  <table id="previewTable">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script type="module" src="bulk-upload.js"></script>
+</body>
+</html>

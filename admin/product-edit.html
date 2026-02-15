@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Product | Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<header class="admin-header">
+  <h1>Edit Product</h1>
+  <a href="products.html" class="btn-outline">← Back</a>
+</header>
+
+<main class="admin-layout">
+
+  <!-- PRODUCT DETAILS -->
+  <section class="card">
+    <h2>Product Details</h2>
+
+    <label>Name</label>
+    <input id="name" type="text">
+
+
+
+    <label>Slug</label>
+<input id="slug" type="text">
+
+    <label>MRP</label>
+    <input id="mrp" type="number">
+
+    <label>Price</label>
+    <input id="price" type="number">
+
+    <label>Discount (%)</label>
+    <input id="discount" type="number">
+
+    <label>Short Description</label>
+    <textarea id="shortDesc"></textarea>
+
+    <label>Long Description</label>
+    <textarea id="longDesc"></textarea>
+
+    <label class="checkbox-row">
+      <input type="checkbox" id="active"> Active
+    </label>
+
+    
+  </section>
+
+  <!-- BRAND & CATEGORY -->
+  <section class="card">
+  <h2>Brand, Category & Style</h2>
+
+  <label>Brand</label>
+  <select id="brand"></select>
+
+  <label>Category</label>
+  <select id="category"></select>
+
+  <label>Style</label>
+  <select id="style"></select>
+</section>
+
+
+<!-- VARIANTS (READ ONLY) -->
+<section class="card" id="variantsSection">
+  <h2>Variants (Read Only)</h2>
+
+  <!-- COLOR SELECT -->
+  <label>Color</label>
+ <select id="colorSelect"></select>
+
+
+  <!-- SIZE LIST -->
+  <div id="sizeList" class="size-readonly"></div>
+
+  <p class="note">
+    Colors & sizes are managed from separate admin pages.
+  </p>
+  <a href="variants.html" id="variantsBtn" class="btn-secondary">
+  ⚙️ Manage Variants
+</a>
+
+</section>
+
+  <!-- IMAGES (SUPABASE STORAGE) -->
+  <section class="card">
+    <h2>Images</h2>
+
+    <p class="muted">
+      Images are stored in Supabase Storage.
+      You can add, delete or replace them here.
+    </p>
+
+    <input type="file" id="images" multiple>
+
+    <!-- Existing images from image_gallery -->
+    <div id="imageGallery" class="image-gallery"></div>
+<button id="syncImagesBtn" class="btn-outline">
+  🔄 Sync Images from Bucket
+</button>
+  </section>
+<button id="saveProduct" class="btn-primary">Save Product</button>
+</main>
+
+<script type="module" src="product-edit.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Variants | Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="variants.css">
+</head>
+<body>
+
+<h2>Manage Variants (Colors, Sizes & Stock)</h2>
+
+<!-- PRODUCT SELECT -->
+<section>
+  <label>Product</label>
+  <select id="productSelect"></select>
+</section>
+
+<hr>
+
+<!-- COLOR MANAGEMENT -->
+<section>
+  <h3>Colors</h3>
+
+  <input id="colorInput" placeholder="Add color (e.g. brown)">
+  <button id="addColorBtn">Add Color</button>
+
+  <ul id="colorList"></ul>
+</section>
+
+<hr>
+
+<!-- SIZE & STOCK -->
+<section>
+  <h3>Sizes & Stock</h3>
+
+  <p id="selectedColorNote" class="muted">
+    Select a color to manage sizes
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Size</th>
+        <th>Stock</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="variantsTable"></tbody>
+  </table>
+
+  <h4>Add / Edit Size</h4>
+  <input type="text" id="sizeInput" placeholder="Size (e.g. 40)">
+  <input type="number" id="stockInput" placeholder="Stock">
+  <button id="saveSizeBtn">Save</button>
+</section>
+
+<script type="module" src="variants.js"></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+.category-page {
+  padding: 24px;
+}
+
+.category-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.category-form input {
+  padding: 8px;
+  width: 220px;
+}
+
+.category-form button {
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.category-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.category-table th,
+.category-table td {
+  border: 1px solid #e5e5e5;
+  padding: 10px;
+}
+
+.category-table th {
+  background: #f7f7f7;
+}
+
+.actions button {
+  margin-right: 6px;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.actions .danger {
+  background: #ffecec;
+  border: 1px solid #f5b5b5;
+}

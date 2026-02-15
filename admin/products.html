@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin | Products</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="products-table.css">
+</head>
+<body>
+
+<header class="admin-header">
+  <a href="dashboard.html">← Back</a>
+  <h1>Manage Products</h1>
+  <a href="product-add.html" class="btn">+ Add Product</a>
+</header>
+
+<main class="products-page table-wrap">
+  <table class="products-table">
+    <thead>
+      <tr>
+        <th style="width:72px">Image</th>
+        <th>Name</th>
+        <th>Brand</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>MRP</th>
+        <th>Active</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="productsBody"></tbody>
+  </table>
+</main>
+
+<script type="module" src="products-table.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+.table-wrap{
+  padding:24px;
+  overflow-x:auto;
+}
+
+/* TABLE */
+/* TABLE */
+.products-table{
+  width:100%;
+  border-collapse:collapse;
+  table-layout:fixed;
+  background:#fff;
+  font-size:14px;
+}
+
+.products-table th,
+.products-table td{
+  border:1px solid #e5e5e5;
+  padding:8px;
+  vertical-align:middle;
+  overflow:hidden;
+}
+
+/* IMAGE COLUMN STRICT */
+.products-table th:first-child,
+.products-table td:first-child{
+  width:64px;
+  min-width:64px;
+  max-width:64px;
+  text-align:center;
+}
+
+/* IMAGE BOX (FINAL FIX) */
+.imgs{
+  width:40px;
+  height:40px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+/* IMAGE ITSELF */
+.imgs img{
+  display:block;
+  width:40px;
+  height:40px;
+  max-width:40px;
+  max-height:40px;
+  object-fit:contain;
+  background:#f5f5f5;
+  border-radius:6px;
+}
+
+/* HIDE EXTRA IMAGES */
+.imgs img:not(:first-child){
+  display:none;
+}
+
+/* ACTIONS */
+.actions button{
+  padding:4px 8px;
+  font-size:12px;
+  cursor:pointer;
+}
+
+.actions .danger{
+  background:#ffecec;
+  border:1px solid #f5b5b5;
+}
