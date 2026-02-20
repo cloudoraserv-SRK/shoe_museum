@@ -3,3 +3,50 @@
 <button id="trackBtn">Track Order</button>
 
 <div id="status"></div>
+<script>
+
+document.getElementById("trackBtn").addEventListener("click", async () => {
+
+  const orderId = document.getElementById("orderId").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const statusBox = document.getElementById("status");
+
+  if (!orderId || !email) {
+    statusBox.innerText = "Please enter Order ID and Email";
+    return;
+  }
+
+  statusBox.innerText = "Checking...";
+
+  try {
+
+    const res = await fetch(
+      `https://vxdulkarabqzdwfjckis.supabase.co/rest/v1/orders?order_id=eq.${orderId}&customer_email=eq.${email}`,
+      {
+        headers: {
+          "apikey": "YOUR_ANON_KEY"
+        }
+      }
+    );
+
+    const data = await res.json();
+
+    if (!data.length) {
+      statusBox.innerText = "Order not found";
+      return;
+    }
+
+    const order = data[0];
+
+    statusBox.innerHTML = `
+      <strong>Status:</strong> ${order.status.toUpperCase()} <br>
+      <strong>Amount:</strong> ₹${order.amount} <br>
+      <strong>Created:</strong> ${new Date(order.created_at).toDateString()}
+    `;
+
+  } catch (err) {
+    statusBox.innerText = "Error checking order";
+  }
+
+});
+</script>
