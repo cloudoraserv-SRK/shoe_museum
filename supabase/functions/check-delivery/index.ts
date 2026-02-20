@@ -1,54 +1,57 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from "https://deno.land/std/http/server.ts";
 
 serve(async (req) => {
+
+  if (req.method === "OPTIONS") {
+    return new Response("ok", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+        "Access-Control-Allow-Methods": "POST, OPTIONS"
+      }
+    });
+  }
 
   try {
     const { pincode } = await req.json();
 
-    if (!pincode) {
-      return new Response(
-        JSON.stringify({ error: "Pincode required" }),
-        { status: 400 }
-      );
-    }
-
-    const response = await fetch(
+    const res = await fetch(
       `https://track.delhivery.com/c/api/pin-codes/json/?filter_codes=${pincode}`,
       {
-        method: "GET",
         headers: {
           "Authorization": `Token ${Deno.env.get("DELHIVERY_KEY")}`
         }
       }
     );
 
-    const data = await response.json();
+    const data = await res.json();
 
-    if (!data.delivery_codes?.length) {
-      return new Response(
-        JSON.stringify({ serviceable: false }),
-        { status: 200 }
-      );
-    }
-
-    const codAvailable =
-      data.delivery_codes[0].postal_code.cod === "Y";
+    const serviceable = data?.delivery_codes?.length > 0;
 
     return new Response(
       JSON.stringify({
-        serviceable: true,
-        cod: codAvailable,
-        estimated_days: 4,
-        shipping_charge: 0
+        serviceable,
+        cod_available: serviceable,
+        estimated_days: serviceable ? 3 : null
       }),
-      { status: 200 }
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      }
     );
 
   } catch (err) {
     return new Response(
-      JSON.stringify({ error: err.message }),
-      { status: 500 }
+      JSON.stringify({ error: "Something went wrong" }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
+      }
     );
   }
-
 });
