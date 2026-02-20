@@ -217,43 +217,72 @@ function mapColor(c) {
   }[c?.toLowerCase()] || "#ccc";
 }
 
-/* DELIVERY CHECK */
-document.getElementById("checkDeliveryBtn").onclick = async () => {
-  const pin = document.getElementById("pincodeInput").value.trim();
-  const result = document.getElementById("deliveryResult");
+/* ================= DELIVERY CHECK ================= */
 
-  if (pin.length !== 6) {
-    result.textContent = "Enter valid 6 digit pincode";
-    result.className = "delivery-result error";
-    return;
-  }
+const FUNCTION_URL =
+  "https://vxdulkarabqzdwfjckis.supabase.co/functions/v1/check-delivery";
 
-  result.textContent = "Checking...";
-  result.className = "delivery-result";
+const checkBtn = document.getElementById("checkDeliveryBtn");
+const pinInput = document.getElementById("pincodeInput");
+const resultBox = document.getElementById("deliveryResult");
 
-  try {
-    const res = await fetch(`/api/check-delivery?pincode=${pin}`);
-    const data = await res.json();
+if (checkBtn) {
+  checkBtn.addEventListener("click", async () => {
 
-    if (!data.serviceable) {
-      result.textContent = "Delivery not available in this area";
-      result.className = "delivery-result error";
+    const pin = pinInput.value.trim();
+
+    if (!/^\d{6}$/.test(pin)) {
+      resultBox.textContent = "Enter valid 6 digit pincode";
+      resultBox.className = "delivery-result error";
       return;
     }
 
-    const today = new Date();
-    today.setDate(today.getDate() + data.estimated_days);
+    resultBox.textContent = "Checking delivery...";
+    resultBox.className = "delivery-result";
 
-    result.innerHTML = `
-      🚚 Delivery by <b>${today.toDateString()}</b><br>
-      ${data.cod_available ? "💵 COD Available" : "❌ COD Not Available"}<br>
-      ${data.estimated_days <= 4 ? "Free Shipping" : "Shipping ₹99"}
-    `;
+    try {
 
-    result.className = "delivery-result success";
-  } catch {
-    result.textContent = "Unable to check delivery";
-    result.className = "delivery-result error";
-  }
-};
+      const res = await fetch(FUNCTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ pincode: pin })
+      });
+
+      const data = await res.json();
+
+      if (!data.serviceable) {
+        resultBox.textContent = "Delivery not available in this area";
+        resultBox.className = "delivery-result error";
+        return;
+      }
+
+      const deliveryDate = new Date();
+      deliveryDate.setDate(
+        deliveryDate.getDate() + data.estimated_days
+      );
+
+      resultBox.innerHTML = `
+        🚚 Delivery by <b>${deliveryDate.toDateString()}</b><br>
+        ${data.cod ? "💵 COD Available" : "❌ COD Not Available"}<br>
+        ${
+          data.shipping_charge === 0
+            ? "Free Shipping"
+            : `Shipping ₹${data.shipping_charge}`
+        }
+      `;
+
+      resultBox.className = "delivery-result success";
+
+    } catch (err) {
+
+      resultBox.textContent = "Unable to check delivery";
+      resultBox.className = "delivery-result error";
+
+      console.error(err);
+    }
+
+  });
+}
 localStorage.removeItem("cart")
