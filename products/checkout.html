@@ -151,16 +151,17 @@
   
   <!-- FOOTER BOTTOM -->
   <div class="footer-bottom">
-  <span>© 1991 UNIQUE AGENCIES. All Rights Reserved..</span>
+    <span>© 1991 Shoe Museum. All rights reserved.</span>
   </div>
 
 </footer>
 <script type="module" src="../script.js"></script>
-<script>
 /* =========================
    LOAD CART
 ========================= */
-// LOAD CART
+
+<script>
+
 const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
 const orderSummary = document.getElementById("orderSummary");
@@ -169,7 +170,7 @@ const payBtn = document.getElementById("payNowBtn");
 
 let total = 0;
 
-// RENDER SUMMARY
+/* RENDER CART */
 cart.forEach(item => {
   const row = document.createElement("div");
   row.className = "order-item";
@@ -183,48 +184,70 @@ cart.forEach(item => {
 
 orderTotal.innerText = `₹${total}`;
 
-// PAY BUTTON
+/* PAY NOW */
 payBtn.addEventListener("click", async () => {
-  const name = document.getElementById("customerName").value.trim();
-  const email = document.getElementById("customerEmail").value.trim();
-  const phone = document.getElementById("customerPhone").value.trim();
-  const address = document.getElementById("customerAddress").value.trim();
-  const city = document.getElementById("customerCity").value.trim();
-  const pincode = document.getElementById("customerPincode").value.trim();
+
+  const name = customerName.value.trim();
+  const email = customerEmail.value.trim();
+  const phone = customerPhone.value.trim();
+  const address = customerAddress.value.trim();
+  const city = customerCity.value.trim();
+  const pincode = customerPincode.value.trim();
 
   if (!name || !email || !phone || !address || !city || !pincode) {
     alert("Please fill all details");
     return;
   }
 
-  // 🔒 BACKEND INTEGRATION POINT
-  // POST to backend → create Cashfree order
-  // backend returns payment_session_id
+  if (!cart.length) {
+    alert("Cart empty");
+    return;
+  }
 
-  /*
-  const res = await fetch("/api/create-cashfree-order", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      customer: { name, email, phone, address, city, pincode },
-      amount: total,
-      cart
-    })
-  });
-  const { payment_session_id } = await res.json();
-  */
+  payBtn.disabled = true;
+  payBtn.innerText = "Processing...";
 
-  // 🔁 TEMP PLACEHOLDER
-  alert("Cashfree integration ready. Backend connect pending.");
+  try {
 
-  // AFTER BACKEND:
-  // Cashfree.checkout({ paymentSessionId: payment_session_id });
+    const res = await fetch(
+      "https://vxdulkarabqzdwfjckis.supabase.co/functions/v1/create-payment",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: total,
+          customer: {
+            id: "cust_" + Date.now(),
+            name,
+            email,
+            phone
+          },
+          shipping: { address, city, pincode },
+          cart
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (!data.payment_link) {
+      alert("Payment creation failed");
+      payBtn.disabled = false;
+      payBtn.innerText = "Pay Securely";
+      return;
+    }
+
+    window.location.href = data.payment_link;
+
+  } catch (err) {
+    alert("Payment failed");
+    payBtn.disabled = false;
+    payBtn.innerText = "Pay Securely";
+  }
+
 });
-
 </script>
-
 <script type="module" src="../script.js"></script>
 </body>
 </html>
-
 

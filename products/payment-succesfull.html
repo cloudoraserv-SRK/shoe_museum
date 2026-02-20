@@ -1,0 +1,29 @@
+<h2 id="status">Verifying Payment...</h2>
+
+<script>
+const params = new URLSearchParams(location.search);
+const orderId = params.get("order_id");
+
+async function verify() {
+
+  const res = await fetch(
+    "https://vxdulkarabqzdwfjckis.supabase.co/rest/v1/orders?order_id=eq." + orderId,
+    {
+      headers: {
+        "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0"
+      }
+    }
+  );
+
+  const data = await res.json();
+
+  if (data[0]?.status === "paid") {
+    document.getElementById("status").innerText = "Payment Successful ✅";
+    localStorage.removeItem("cart");
+  } else {
+    document.getElementById("status").innerText = "Payment Pending ⏳";
+  }
+}
+
+verify();
+</script>
