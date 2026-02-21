@@ -138,3 +138,9 @@ document.getElementById("hamburger").onclick = ()=>{
 };
 
 
+document.getElementById("searchToggle")
+  .addEventListener("click", function(){
+    const box = document.getElementById("searchBox");
+    box.style.display =
+      box.style.display === "block" ? "none" : "block";
+});
