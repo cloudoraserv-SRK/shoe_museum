@@ -133,3 +133,8 @@ if (colors.length) {
   });
 
 });
+document.getElementById("hamburger").onclick = ()=>{
+  document.querySelector(".nav-links").classList.toggle("active");
+};
+
+
