@@ -144,3 +144,10 @@ document.getElementById("searchToggle")
     box.style.display =
       box.style.display === "block" ? "none" : "block";
 });
+
+// FILTER TOGGLE
+document.getElementById("filterToggle")
+.addEventListener("click", function(){
+  const panel = document.getElementById("filterPanel");
+  panel.hidden = !panel.hidden;
+});
