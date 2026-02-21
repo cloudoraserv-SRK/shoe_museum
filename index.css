@@ -495,3 +495,62 @@
     grid-template-columns:repeat(2,1fr);
   }
 }
+
+@media(max-width:768px){
+
+  .hero-content h1{
+    font-size:2.2rem;
+  }
+
+  .hero-content p{
+    font-size:15px;
+  }
+
+  .brand-section{
+    padding:60px 5% 40px;
+  }
+
+  .category-grid{
+    gap:20px;
+  }
+
+  .category-card img{
+    height:180px;
+  }
+
+  .about-section{
+    padding:60px 6%;
+  }
+
+  .offer-banner{
+    font-size:14px;
+  }
+
+}
+
+.add-btn,
+.card-footer button{
+  background:linear-gradient(135deg,#ff3c3c,#ff7a00,#ff00c8);
+  background-size:200% auto;
+  color:#fff;
+  border:none;
+  padding:10px 18px;
+  border-radius:50px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.05em;
+  cursor:pointer;
+  transition:.4s ease;
+  box-shadow:0 8px 18px rgba(0,0,0,.25);
+}
+
+.add-btn:hover,
+.card-footer button:hover{
+  transform:translateY(-3px) scale(1.05);
+  background-position:right center;
+  box-shadow:0 15px 30px rgba(0,0,0,.35);
+}
+
+.add-btn:active{
+  transform:scale(.95);
+}
