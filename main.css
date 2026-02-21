@@ -497,3 +497,9 @@ html, body {
   inset: 0;
   background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
 }
+
+@media(max-width:768px){
+  .brand-banner img{
+    height:260px;
+  }
+}
