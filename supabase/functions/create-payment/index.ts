@@ -13,13 +13,11 @@ serve(async (req) => {
   }
 
   try {
-
     const { amount, customer } = await req.json();
 
-    // 🔥 Generate Order ID
     const orderId = "ORDER_" + Date.now();
 
-    // 🔹 1️⃣ Save order as pending in DB
+    // 1️⃣ Save order in DB
     await fetch(`${Deno.env.get("SUPABASE_URL")}/rest/v1/orders`, {
       method: "POST",
       headers: {
@@ -32,13 +30,15 @@ serve(async (req) => {
         customer_name: customer.name,
         customer_email: customer.email,
         customer_phone: customer.phone,
-        amount,
+        amount: Number(amount),
         status: "pending"
       })
     });
 
-    // 🔹 2️⃣ Create Cashfree Order
-    const cfRes = await fetch("https://api.cashfree.com/pg/orders", {
+    // ⚠ IMPORTANT: use sandbox if test keys
+    const CASHFREE_URL = "https://sandbox.cashfree.com/pg/orders";
+
+    const cfRes = await fetch(CASHFREE_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,18 +51,36 @@ serve(async (req) => {
         order_amount: Number(amount),
         order_currency: "INR",
         customer_details: {
-          customer_id: customer.id,
+          customer_id: customer.id || orderId,
           customer_email: customer.email,
           customer_phone: customer.phone
         },
         order_meta: {
           return_url:
-            "https://shoemuseumexclusive.cloud/payment-success?order_id=" + orderId
+            `https://shoemuseumexclusive.cloud/payment-success?order_id=${orderId}`
         }
       })
     });
 
     const cfData = await cfRes.json();
+    console.log("Cashfree Response:", cfData);
+
+    if (!cfRes.ok) {
+      return new Response(JSON.stringify(cfData), {
+        status: 400,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
+    }
+
+    if (!cfData.payment_link) {
+      return new Response(JSON.stringify({
+        error: "Payment link not received",
+        cashfree_response: cfData
+      }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
+    }
 
     return new Response(JSON.stringify({
       payment_link: cfData.payment_link
@@ -74,9 +92,11 @@ serve(async (req) => {
     });
 
   } catch (err) {
+    console.log("Server Error:", err);
 
     return new Response(JSON.stringify({
-      error: "Payment creation failed"
+      error: "Payment creation failed",
+      details: String(err)
     }), {
       status: 500,
       headers: {
@@ -84,11 +104,5 @@ serve(async (req) => {
         "Access-Control-Allow-Origin": "*"
       }
     });
-
   }
-if (!cfRes.ok) {
-  const errorText = await cfRes.text();
-  console.log("Cashfree Error:", errorText);
-  return new Response(errorText, { status: 400 });
-}
 });
