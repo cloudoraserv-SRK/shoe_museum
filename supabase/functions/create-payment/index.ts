@@ -36,7 +36,7 @@ serve(async (req) => {
     });
 
     // ⚠ IMPORTANT: use sandbox if test keys
-    const CASHFREE_URL = "https://sandbox.cashfree.com/pg/orders";
+    const CASHFREE_URL = "https://api.cashfree.com/pg/orders";
 
     const cfRes = await fetch(CASHFREE_URL, {
       method: "POST",
