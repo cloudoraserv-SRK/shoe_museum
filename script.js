@@ -164,6 +164,3 @@ function initSliders() {
   });
 }
 
-document.getElementById("hamburger").onclick = ()=>{
-  document.querySelector(".nav-links").classList.toggle("active");
-};
