@@ -1,20 +1,41 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  const searchInput = document.getElementById("searchInput");
-  const sortSelect = document.getElementById("sortSelect");
-  const filterBtn = document.getElementById("filterBtn");
-  const filterPanel = document.getElementById("filterPanel");
-  const clearBtn = document.getElementById("clearFilters");
+  /* ================= ELEMENTS ================= */
 
-  const brandChecks = document.querySelectorAll(".brand-filter");
-  const colorChecks = document.querySelectorAll(".color-filter");
-  const categoryChecks = document.querySelectorAll(".category-filter");
-  const priceRadios = document.querySelectorAll("input[name='price']");
+  const searchInput   = document.getElementById("searchInput");
+  const sortSelect    = document.getElementById("sortSelect");
+  const filterPanel   = document.getElementById("filterPanel");
+  const clearBtn      = document.getElementById("clearFilters");
 
-  /* ================= PANEL TOGGLE ================= */
-  filterBtn?.addEventListener("click", () => {
+  const searchToggle  = document.getElementById("searchToggle");
+  const filterToggle  = document.getElementById("filterToggle");
+  const hamburger     = document.getElementById("hamburger");
+
+  const brandChecks   = document.querySelectorAll(".brand-filter");
+  const colorChecks   = document.querySelectorAll(".color-filter");
+  const categoryChecks= document.querySelectorAll(".category-filter");
+  const priceRadios   = document.querySelectorAll("input[name='price']");
+
+
+  /* ================= TOGGLES ================= */
+
+  // Hamburger
+  hamburger?.addEventListener("click", () => {
+    document.querySelector(".nav-links")?.classList.toggle("active");
+  });
+
+  // Search dropdown
+  searchToggle?.addEventListener("click", () => {
+    const box = document.getElementById("searchBox");
+    box.style.display =
+      box.style.display === "block" ? "none" : "block";
+  });
+
+  // Filter panel
+  filterToggle?.addEventListener("click", () => {
     filterPanel.hidden = !filterPanel.hidden;
   });
+
 
   /* ================= APPLY FILTERS ================= */
 
@@ -23,31 +44,30 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!window.ALL_PRODUCTS) return;
 
     let list = [...window.ALL_PRODUCTS];
-    /* SEARCH */
-const q = searchInput.value.trim().toLowerCase();
 
-if (q) {
-  list = list.filter(p => {
+    /* 🔎 SEARCH */
+    const q = searchInput?.value.trim().toLowerCase();
 
-    const nameMatch = p.name?.toLowerCase().includes(q);
+    if (q) {
+      list = list.filter(p => {
 
-    const brandMatch = p.brands?.name?.toLowerCase().includes(q);
+        const nameMatch  = p.name?.toLowerCase().includes(q);
+        const brandMatch = p.brands?.name?.toLowerCase().includes(q);
+        const styleMatch = p.styles?.name?.toLowerCase().includes(q);
 
-    const styleMatch = p.styles?.name?.toLowerCase().includes(q);
+        const colorMatch = p.product_variants?.some(v =>
+          v.color_name?.toLowerCase().includes(q)
+        );
 
-    const colorMatch = p.product_variants?.some(v =>
-      v.color_name?.toLowerCase().includes(q)
-    );
+        const sizeMatch = p.product_variants?.some(v =>
+          v.variant_stock?.some(s =>
+            String(s.size).includes(q)
+          )
+        );
 
-    const sizeMatch = p.product_variants?.some(v =>
-      v.variant_stock?.some(s =>
-        String(s.size).includes(q)
-      )
-    );
-
-    return nameMatch || brandMatch || styleMatch || colorMatch || sizeMatch;
-  });
-}
+        return nameMatch || brandMatch || styleMatch || colorMatch || sizeMatch;
+      });
+    }
 
 
     /* 🏷 BRAND FILTER */
@@ -61,7 +81,8 @@ if (q) {
       );
     }
 
-    /* 👟 STYLE FILTER */
+
+    /* 👟 CATEGORY FILTER */
     const styles = [...categoryChecks]
       .filter(c => c.checked)
       .map(c => c.value.toLowerCase());
@@ -72,20 +93,20 @@ if (q) {
       );
     }
 
+
     /* 🎨 COLOR FILTER */
     const colors = [...colorChecks]
       .filter(c => c.checked)
       .map(c => c.value.toLowerCase());
 
-    /* COLOR */
-if (colors.length) {
-  list = list.filter(p =>
-    p.product_variants?.some(v =>
-      v.color_name &&
-      colors.includes(v.color_name.toLowerCase())
-    )
-  );
-}
+    if (colors.length) {
+      list = list.filter(p =>
+        p.product_variants?.some(v =>
+          v.color_name &&
+          colors.includes(v.color_name.toLowerCase())
+        )
+      );
+    }
 
 
     /* 💰 PRICE FILTER */
@@ -93,23 +114,26 @@ if (colors.length) {
 
     if (price) {
       list = list.filter(p => {
-        if (price === "0-1000") return p.price < 1000;
-        if (price === "1000-3000") return p.price >= 1000 && p.price <= 3000;
-        if (price === "3000+") return p.price > 3000;
+        if (price === "0-1000")   return p.price < 1000;
+        if (price === "1000-3000")return p.price >= 1000 && p.price <= 3000;
+        if (price === "3000+")    return p.price > 3000;
+        return true;
       });
     }
 
+
     /* ↕ SORT */
-    if (sortSelect.value === "price_low") {
+    if (sortSelect?.value === "price_low") {
       list.sort((a, b) => a.price - b.price);
     }
 
-    if (sortSelect.value === "price_high") {
+    if (sortSelect?.value === "price_high") {
       list.sort((a, b) => b.price - a.price);
     }
 
     renderProducts(list);
   }
+
 
   /* ================= EVENTS ================= */
 
@@ -119,10 +143,13 @@ if (colors.length) {
   [...brandChecks, ...colorChecks, ...categoryChecks, ...priceRadios]
     .forEach(el => el.addEventListener("change", applyFilters));
 
+
+  /* ================= CLEAR FILTERS ================= */
+
   clearBtn?.addEventListener("click", () => {
 
-    searchInput.value = "";
-    sortSelect.value = "";
+    if (searchInput) searchInput.value = "";
+    if (sortSelect) sortSelect.value = "";
 
     brandChecks.forEach(b => b.checked = false);
     colorChecks.forEach(c => c.checked = false);
@@ -132,22 +159,4 @@ if (colors.length) {
     renderProducts(window.ALL_PRODUCTS);
   });
 
-});
-document.getElementById("hamburger").onclick = ()=>{
-  document.querySelector(".nav-links").classList.toggle("active");
-};
-
-
-document.getElementById("searchToggle")
-  .addEventListener("click", function(){
-    const box = document.getElementById("searchBox");
-    box.style.display =
-      box.style.display === "block" ? "none" : "block";
-});
-
-// FILTER TOGGLE
-document.getElementById("filterToggle")
-.addEventListener("click", function(){
-  const panel = document.getElementById("filterPanel");
-  panel.hidden = !panel.hidden;
 });
