@@ -657,4 +657,34 @@
   background:#333;
 }
 
+@media(max-width:1024px){
+  .product-page{
+    grid-template-columns:1fr;
+    gap:40px;
+  }
+
+  .gallery-wrap{
+    flex-direction:column-reverse;
+    align-items:center;
+  }
+
+  .gallery-main{
+    height:360px;
+  }
+
+  .gallery-thumbs{
+    flex-direction:row;
+    justify-content:center;
+  }
+}
+
+@media(max-width:480px){
+  .gallery-main{
+    height:280px;
+  }
+
+  .product-info h1{
+    font-size:22px;
+  }
+}
 
