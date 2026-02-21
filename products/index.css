@@ -47,29 +47,37 @@ body {
 }
 
 /* CARD */
-.product-card {
-  background: #fff;
-  border-radius: 18px;
-  padding: 18px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.06);
-  display: flex;
-  flex-direction: column;
-  transition: all .3s ease;
+.product-card{
+  background:#fff;
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  overflow:hidden;   /* IMPORTANT */
 }
 
-.product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.12);
-}
-
-/* IMAGE */
 .product-card img{
   width:100%;
-  height:200px;
-  object-fit:contain;
-  border-radius:12px;
+  height:180px;
+  object-fit:contain;   /* FIXED */
   background:#f8f8f8;
-  padding:12px;
+  border-radius:12px;
+  padding:10px;
+  transition:.3s ease;
+}
+
+.product-card:hover img{
+  transform:scale(1.04);  /* small zoom */
+}
+
+@media(max-width:768px){
+  .product-card img{ height:140px; }
+}
+
+@media(max-width:480px){
+  .product-card img{ height:110px; }
 }
 
 /* Tablet */
@@ -143,20 +151,27 @@ body {
 }
 
 /* BUTTON */
-.add-cart-btn {
-  background: #000;
-  color: #fff;
-  padding: 10px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  transition: .2s;
+.add-cart-btn{
+  background:linear-gradient(135deg,#ff416c,#ff4b2b);
+  color:#fff;
+  padding:11px;
+  border:none;
+  border-radius:40px;
+  font-weight:600;
+  letter-spacing:.05em;
+  cursor:pointer;
+  transition:.3s ease;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
 }
 
-.add-cart-btn:hover {
-  background: #333;
+.add-cart-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 30px rgba(0,0,0,.35);
 }
 
+.add-cart-btn:active{
+  transform:scale(.95);
+}
 
 /* =========================
    HOVER EFFECT
@@ -282,22 +297,7 @@ body {
     padding: 8px;
   }
 }
-.product-card {
-  background: #fff;
-  padding: 15px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
 
-.product-card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 12px;
-}
 
 .brand {
   font-size: 13px;
@@ -352,4 +352,5 @@ body {
   color: inherit;
   display: block;
 }
+
 
