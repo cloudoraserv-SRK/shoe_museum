@@ -489,3 +489,9 @@
     flex: 1;
   }
 }
+
+@media(max-width:480px){
+  .products-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
