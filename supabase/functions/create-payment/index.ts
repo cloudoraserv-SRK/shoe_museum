@@ -48,7 +48,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         order_id: orderId,
-        order_amount: amount,
+        order_amount: Number(amount),
         order_currency: "INR",
         customer_details: {
           customer_id: customer.id,
@@ -86,5 +86,9 @@ serve(async (req) => {
     });
 
   }
-
+if (!cfRes.ok) {
+  const errorText = await cfRes.text();
+  console.log("Cashfree Error:", errorText);
+  return new Response(errorText, { status: 400 });
+}
 });
