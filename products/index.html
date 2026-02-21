@@ -47,68 +47,74 @@
     </ul>
   </nav>
 <div class="nav-actions">
-  <div class="search-bar">
 
-    <!-- SEARCH -->
+  <!-- SEARCH ICON -->
+  <button class="icon-btn" id="searchToggle">
+    🔍
+  </button>
+
+  <!-- SORT ICON -->
+  <button class="icon-btn" id="sortToggle">
+    ⇅
+  </button>
+
+  <!-- FILTER ICON -->
+  <button class="icon-btn" id="filterToggle">
+    ⚙
+  </button>
+
+  <!-- SEARCH DROPDOWN -->
+  <div class="search-dropdown" id="searchBox">
     <input
       type="text"
       id="searchInput"
-      placeholder="Search by shoe, brand, color, category…"
+      placeholder="Search by shoe, brand, color..."
     />
-
-    <!-- SORT -->
-    <select id="sortSelect">
-      <option value="">Sort</option>
-      <option value="price_low">Price: Low to High</option>
-      <option value="price_high">Price: High to Low</option>
-      <option value="newest">Newest</option>
-    </select>
-
-    <!-- FILTER TOGGLE -->
-    <button id="filterBtn">Filter</button>
   </div>
 
-  <!-- FILTER PANEL -->
-  <div class="filter-panel" id="filterPanel" hidden>
-
-    <!-- BRAND -->
-    <div class="filter-group">
-      <h4>Brand</h4>
-      <label><input type="checkbox" value="pierre-cardin" class="brand-filter"> Pierre Cardin</label>
-      <label><input type="checkbox" value="liberty" class="brand-filter"> Liberty</label>
-      <label><input type="checkbox" value="woodland" class="brand-filter"> Woodland</label>
-      <label><input type="checkbox" value="medifeet" class="brand-filter"> Medifeet</label>
-    </div>
-
-    <!-- COLOR -->
-    <div class="filter-group">
-      <h4>Color</h4>
-      <label><input type="checkbox" value="black" class="color-filter"> Black</label>
-      <label><input type="checkbox" value="brown" class="color-filter"> Brown</label>
-      <label><input type="checkbox" value="white" class="color-filter"> White</label>
-    </div>
-
-    <!-- CATEGORY -->
-    <div class="filter-group">
-      <h4>Category</h4>
-      <label><input type="checkbox" value="formal" class="category-filter"> Formal</label>
-      <label><input type="checkbox" value="casual" class="category-filter"> Casual</label>
-      <label><input type="checkbox" value="sports" class="category-filter"> Sports</label>
-      <label><input type="checkbox" value="slippers" class="category-filter"> Slippers</label>
-    </div>
-
-    <!-- PRICE RANGE -->
-    <div class="filter-group">
-      <h4>Price</h4>
-      <label><input type="radio" name="price" value="0-1000"> Below ₹1000</label>
-      <label><input type="radio" name="price" value="1000-3000"> ₹1000 – ₹3000</label>
-      <label><input type="radio" name="price" value="3000+"> Above ₹3000</label>
-    </div>
-
-    <button id="clearFilters">Clear Filters</button>
-  </div>
 </div>
 
+
+<!-- FILTER PANEL -->
+<div class="filter-panel" id="filterPanel" hidden>
+
+  <!-- BRAND -->
+  <div class="filter-group">
+    <h4>Brand</h4>
+    <label><input type="checkbox" value="pierre-cardin" class="brand-filter"> Pierre Cardin</label>
+    <label><input type="checkbox" value="liberty" class="brand-filter"> Liberty</label>
+    <label><input type="checkbox" value="woodland" class="brand-filter"> Woodland</label>
+    <label><input type="checkbox" value="medifeet" class="brand-filter"> Medifeet</label>
+  </div>
+
+  <!-- COLOR -->
+  <div class="filter-group">
+    <h4>Color</h4>
+    <label><input type="checkbox" value="black" class="color-filter"> Black</label>
+    <label><input type="checkbox" value="brown" class="color-filter"> Brown</label>
+    <label><input type="checkbox" value="white" class="color-filter"> White</label>
+  </div>
+
+  <!-- CATEGORY -->
+  <div class="filter-group">
+    <h4>Category</h4>
+    <label><input type="checkbox" value="formal" class="category-filter"> Formal</label>
+    <label><input type="checkbox" value="casual" class="category-filter"> Casual</label>
+    <label><input type="checkbox" value="sports" class="category-filter"> Sports</label>
+    <label><input type="checkbox" value="slippers" class="category-filter"> Slippers</label>
+  </div>
+
+  <!-- PRICE -->
+  <div class="filter-group">
+    <h4>Price</h4>
+    <label><input type="radio" name="price" value="0-1000"> Below ₹1000</label>
+    <label><input type="radio" name="price" value="1000-3000"> ₹1000 – ₹3000</label>
+    <label><input type="radio" name="price" value="3000+"> Above ₹3000</label>
+  </div>
+
+  <button id="clearFilters" class="clear-btn">Clear Filters</button>
+
+</div>
 
 </header>
 <!-- ================= All Shoes  ================= -->
@@ -175,5 +181,6 @@
 
 </body>
 </html>
+
 
 
