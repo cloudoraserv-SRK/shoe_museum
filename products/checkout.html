@@ -156,13 +156,13 @@
   </div>
 
 </footer>
-<script type="module" src="../script.js"></script>
-/* =========================
+
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+<!-- =========================
    LOAD CART
-========================= */
+========================= -->
 
 <script>
-
 const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
 const orderSummary = document.getElementById("orderSummary");
@@ -171,7 +171,6 @@ const payBtn = document.getElementById("payNowBtn");
 
 let total = 0;
 
-/* RENDER CART */
 cart.forEach(item => {
   const row = document.createElement("div");
   row.className = "order-item";
@@ -185,7 +184,6 @@ cart.forEach(item => {
 
 orderTotal.innerText = `₹${total}`;
 
-/* PAY NOW */
 payBtn.addEventListener("click", async () => {
 
   const name = customerName.value.trim();
@@ -222,23 +220,28 @@ payBtn.addEventListener("click", async () => {
             name,
             email,
             phone
-          },
-          shipping: { address, city, pincode },
-          cart
+          }
         })
       }
     );
 
     const data = await res.json();
 
-    if (!data.payment_link) {
+    if (!data.payment_session_id) {
       alert("Payment creation failed");
       payBtn.disabled = false;
       payBtn.innerText = "Pay Securely";
       return;
     }
 
-    window.location.href = data.payment_link;
+    const cashfree = Cashfree({
+      mode: "production"   // sandbox use karo agar test mode hai
+    });
+
+    cashfree.checkout({
+      paymentSessionId: data.payment_session_id,
+      redirectTarget: "_self"
+    });
 
   } catch (err) {
     alert("Payment failed");
@@ -248,8 +251,9 @@ payBtn.addEventListener("click", async () => {
 
 });
 </script>
-<script type="module" src="../script.js"></script>
+  <script type="module" src="../script.js"></script>
 </body>
 </html>
+
 
 
