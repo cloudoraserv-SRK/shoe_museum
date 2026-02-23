@@ -37,7 +37,9 @@ serve(async (req) => {
 
     // ⚠ IMPORTANT: use sandbox if test keys
     const CASHFREE_URL = "https://api.cashfree.com/pg/orders";
-
+console.log("ENV CHECK:");
+console.log("APP_ID:", Deno.env.get("CASHFREE_APP_ID"));
+console.log("SECRET:", Deno.env.get("CASHFREE_SECRET_KEY"));
     const cfRes = await fetch(CASHFREE_URL, {
       method: "POST",
       headers: {
