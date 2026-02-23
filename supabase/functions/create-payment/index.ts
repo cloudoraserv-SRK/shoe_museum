@@ -15,6 +15,15 @@ serve(async (req) => {
   try {
     const { amount, customer } = await req.json();
 
+    if (!amount || !customer) {
+      return new Response(JSON.stringify({
+        error: "Missing amount or customer details"
+      }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+      });
+    }
+
     const orderId = "ORDER_" + Date.now();
 
     // 1️⃣ Save order in DB
@@ -35,11 +44,8 @@ serve(async (req) => {
       })
     });
 
-    // ⚠ IMPORTANT: use sandbox if test keys
     const CASHFREE_URL = "https://api.cashfree.com/pg/orders";
-console.log("ENV CHECK:");
-console.log("APP_ID:", Deno.env.get("CASHFREE_APP_ID"));
-console.log("SECRET:", Deno.env.get("CASHFREE_SECRET_KEY"));
+
     const cfRes = await fetch(CASHFREE_URL, {
       method: "POST",
       headers: {
@@ -58,8 +64,7 @@ console.log("SECRET:", Deno.env.get("CASHFREE_SECRET_KEY"));
           customer_phone: customer.phone
         },
         order_meta: {
-          return_url:
-            `https://shoemuseumexclusive.cloud/payment-success?order_id=${orderId}`
+          return_url: `https://shoemuseumexclusive.cloud/products/payment-success?order_id=${orderId}`
         }
       })
     });
@@ -70,22 +75,29 @@ console.log("SECRET:", Deno.env.get("CASHFREE_SECRET_KEY"));
     if (!cfRes.ok) {
       return new Response(JSON.stringify(cfData), {
         status: 400,
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
       });
     }
 
-    if (!cfData.payment_link) {
+    // ✅ Correct field
+    if (!cfData.payment_session_id) {
       return new Response(JSON.stringify({
-        error: "Payment link not received",
+        error: "Payment session not received",
         cashfree_response: cfData
       }), {
         status: 400,
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" }
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*"
+        }
       });
     }
 
     return new Response(JSON.stringify({
-      payment_link: cfData.payment_link
+      payment_session_id: cfData.payment_session_id
     }), {
       headers: {
         "Content-Type": "application/json",
