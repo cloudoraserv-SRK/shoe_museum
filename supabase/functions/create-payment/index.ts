@@ -64,7 +64,7 @@ serve(async (req) => {
           customer_phone: customer.phone
         },
         order_meta: {
-          return_url: `https://shoemuseumexclusive.cloud/products/payment-successful.html?order_id=${orderId}`
+          return_url: `https://shoemuseumexclusive.cloud/products/payment-successfull.html?order_id=${orderId}`
         }
       })
     });
