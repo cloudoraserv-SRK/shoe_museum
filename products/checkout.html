@@ -208,22 +208,26 @@ payBtn.addEventListener("click", async () => {
 
   try {
 
-    const res = await fetch(
-      "https://vxdulkarabqzdwfjckis.supabase.co/functions/v1/create-payment",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          amount: total,
-          customer: {
-            id: "cust_" + Date.now(),
-            name,
-            email,
-            phone
-          }
-        })
+   const res = await fetch(
+  "https://vxdulkarabqzdwfjckis.supabase.co/functions/v1/create-payment",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0",
+      "Authorization": "Bearer YOUR_SUPABASE_ANON_KEY"
+    },
+    body: JSON.stringify({
+      amount: total,
+      customer: {
+        id: "cust_" + Date.now(),
+        name,
+        email,
+        phone
       }
-    );
+    })
+  }
+);
 
     const data = await res.json();
 
@@ -253,6 +257,7 @@ payBtn.addEventListener("click", async () => {
 </script>
 </body>
 </html>
+
 
 
 
