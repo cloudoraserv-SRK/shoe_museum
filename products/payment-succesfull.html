@@ -1,4 +1,69 @@
-<h2 id="status">Verifying Payment...</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Successful | Shoe Museum</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.card {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  text-align: center;
+  width: 90%;
+  max-width: 420px;
+}
+
+.success-icon {
+  font-size: 60px;
+  color: #22c55e;
+  margin-bottom: 15px;
+}
+
+h2 {
+  margin: 10px 0;
+}
+
+.status {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.redirect {
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.countdown {
+  font-weight: bold;
+  color: #ef4444;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <div class="success-icon">✔</div>
+  <h2 id="status">Verifying Payment...</h2>
+  <div class="redirect" id="redirectBox" style="display:none;">
+    Redirecting you to Home page in 
+    <span class="countdown" id="countdown">5</span> seconds...
+  </div>
+</div>
 
 <script>
 const params = new URLSearchParams(location.search);
@@ -10,7 +75,8 @@ async function verify() {
     "https://vxdulkarabqzdwfjckis.supabase.co/rest/v1/orders?order_id=eq." + orderId,
     {
       headers: {
-        "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0"
+        "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0"
       }
     }
   );
@@ -18,8 +84,24 @@ async function verify() {
   const data = await res.json();
 
   if (data[0]?.status === "paid") {
+
     document.getElementById("status").innerText = "Payment Successful ✅";
     localStorage.removeItem("cart");
+
+    document.getElementById("redirectBox").style.display = "block";
+
+    let seconds = 5;
+    const countdown = document.getElementById("countdown");
+
+    const interval = setInterval(() => {
+      seconds--;
+      countdown.innerText = seconds;
+      if (seconds <= 0) {
+        clearInterval(interval);
+        window.location.href = "/";
+      }
+    }, 1000);
+
   } else {
     document.getElementById("status").innerText = "Payment Pending ⏳";
   }
@@ -27,3 +109,6 @@ async function verify() {
 
 verify();
 </script>
+
+</body>
+</html>
