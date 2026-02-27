@@ -112,14 +112,14 @@ document.getElementById("trackBtn").addEventListener("click", async () => {
   try {
 
     const res = await fetch(
-      `https://vxdulkarabqzdwfjckis.supabase.co/rest/v1/orders?order_id=eq.${orderId}&customer_email=eq.${email}`,
-      {
-        headers: {
-          "apikey": ANON_KEY,
-          "Authorization": "Bearer " + ANON_KEY
-        }
-      }
-    );
+  `https://vxdulkarabqzdwfjckis.supabase.co/rest/v1/orders?order_id=eq.${orderId}&customer_phone=eq.${phone}`,
+  {
+    headers: {
+      "apikey": ANON_KEY,
+      "Authorization": "Bearer " + ANON_KEY
+    }
+  }
+);
 
     const data = await res.json();
 
@@ -169,3 +169,4 @@ document.getElementById("trackBtn").addEventListener("click", async () => {
 
 </body>
 </html>
+
