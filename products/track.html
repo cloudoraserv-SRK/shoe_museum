@@ -1,9 +1,98 @@
-<input id="orderId" placeholder="Order ID">
-<input id="email" placeholder="Email">
-<button id="trackBtn">Track Order</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track Order | Shoe Museum</title>
 
-<div id="status"></div>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 500px;
+  margin: 60px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  background: #222;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  background: #f9fafb;
+  font-size: 14px;
+}
+
+.success { color: green; font-weight: bold; }
+.pending { color: orange; font-weight: bold; }
+.failed { color: red; font-weight: bold; }
+
+.track-btn {
+  margin-top: 12px;
+  display: inline-block;
+  padding: 10px 15px;
+  background: #2563eb;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>Track Your Order</h2>
+
+  <input id="orderId" placeholder="Enter Order ID">
+  <input id="email" placeholder="Enter Email">
+  <button id="trackBtn">Track Order</button>
+
+  <div id="status" class="result" style="display:none;"></div>
+
+</div>
+
 <script>
+
+const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0";
 
 document.getElementById("trackBtn").addEventListener("click", async () => {
 
@@ -12,11 +101,13 @@ document.getElementById("trackBtn").addEventListener("click", async () => {
   const statusBox = document.getElementById("status");
 
   if (!orderId || !email) {
+    statusBox.style.display = "block";
     statusBox.innerText = "Please enter Order ID and Email";
     return;
   }
 
-  statusBox.innerText = "Checking...";
+  statusBox.style.display = "block";
+  statusBox.innerText = "Checking order...";
 
   try {
 
@@ -24,7 +115,8 @@ document.getElementById("trackBtn").addEventListener("click", async () => {
       `https://vxdulkarabqzdwfjckis.supabase.co/rest/v1/orders?order_id=eq.${orderId}&customer_email=eq.${email}`,
       {
         headers: {
-          "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0"
+          "apikey": ANON_KEY,
+          "Authorization": "Bearer " + ANON_KEY
         }
       }
     );
@@ -32,16 +124,40 @@ document.getElementById("trackBtn").addEventListener("click", async () => {
     const data = await res.json();
 
     if (!data.length) {
-      statusBox.innerText = "Order not found";
+      statusBox.innerHTML = "Order not found ❌";
       return;
     }
 
     const order = data[0];
 
+    let paymentClass = "pending";
+    if (order.payment_status === "success") paymentClass = "success";
+    if (order.payment_status === "failed") paymentClass = "failed";
+
+    let shipmentInfo = "";
+
+    if (order.tracking_id) {
+      shipmentInfo = `
+        <br><strong>Tracking ID:</strong> ${order.tracking_id}
+        <br><strong>Courier:</strong> ${order.courier_name || "Delhivery"}
+        <br>
+        <a class="track-btn" target="_blank"
+        href="https://www.delhivery.com/track/package/${order.tracking_id}">
+        Track on Delhivery
+        </a>
+      `;
+    } else {
+      shipmentInfo = "<br>Shipment not yet created.";
+    }
+
     statusBox.innerHTML = `
-      <strong>Status:</strong> ${order.status.toUpperCase()} <br>
+      <strong>Order ID:</strong> ${order.order_id} <br>
       <strong>Amount:</strong> ₹${order.amount} <br>
-      <strong>Created:</strong> ${new Date(order.created_at).toDateString()}
+      <strong>Payment Status:</strong>
+      <span class="${paymentClass}">${order.payment_status || order.status}</span>
+      <br>
+      <strong>Shipment Status:</strong> ${order.shipment_status || "Not Shipped"}
+      ${shipmentInfo}
     `;
 
   } catch (err) {
@@ -51,3 +167,5 @@ document.getElementById("trackBtn").addEventListener("click", async () => {
 });
 </script>
 
+</body>
+</html>
