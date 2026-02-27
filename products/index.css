@@ -263,3 +263,54 @@ body{
     height:130px;
   }
 }
+
+/* Remove ugly blue links */
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+/* Product link styling */
+.product-link{
+  display:block;
+  color:#111;
+  transition:.2s ease;
+}
+
+.product-link:hover{
+  color:#ff6a00;
+}
+
+/* Brand */
+.brand{
+  font-size:12px;
+  color:#777;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+/* Product Title */
+.product-card h3{
+  font-size:15px;
+  font-weight:600;
+  line-height:1.4;
+  transition:.2s;
+}
+
+.product-card:hover h3{
+  color:#ff6a00;
+}
+.product-card{
+  overflow:hidden;
+}
+
+.product-card img{
+  transition:transform .5s cubic-bezier(.22,.61,.36,1);
+}
+
+.product-card:hover img{
+  transform:scale(1.08);
+}
+.product-card:hover{
+  box-shadow:0 25px 50px rgba(0,0,0,.15);
+                              }
