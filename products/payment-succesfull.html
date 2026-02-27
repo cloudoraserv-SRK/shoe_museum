@@ -75,9 +75,7 @@ async function verify() {
     "https://vxdulkarabqzdwfjckis.supabase.co/rest/v1/orders?order_id=eq." + orderId,
     {
       headers: {
-        "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0",
-        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0"
-      }
+       
     }
   );
 
@@ -112,3 +110,157 @@ verify();
 
 </body>
 </html>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Payment Successful | Shoe Museum</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Arial;
+  background:#f4f6f9;
+  margin:0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.card{
+  background:white;
+  padding:30px;
+  border-radius:12px;
+  width:420px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
+  text-align:center;
+}
+
+.success{
+  color:green;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.pending{
+  color:orange;
+  font-weight:bold;
+}
+
+.track-btn{
+  display:inline-block;
+  margin-top:15px;
+  padding:10px 15px;
+  background:#2563eb;
+  color:white;
+  text-decoration:none;
+  border-radius:6px;
+  font-size:13px;
+}
+
+.redirect{
+  margin-top:20px;
+  font-size:13px;
+  color:#555;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+
+  <div id="content">
+    Verifying Payment...
+  </div>
+
+  <div class="redirect" id="redirectMsg" style="display:none;">
+    Redirecting to home page in <span id="count">5</span> seconds...
+  </div>
+
+</div>
+
+<script>
+
+const ANON_KEY = "YOUR_ANON_KEY";
+
+const params = new URLSearchParams(location.search);
+const orderId = params.get("order_id");
+
+async function verify() {
+
+  if (!orderId) {
+    document.getElementById("content").innerHTML = "Invalid Order.";
+    return;
+  }
+
+  const res = await fetch(
+    `https://vxdulkarabqzdwfjckis.supabase.co/rest/v1/orders?order_id=eq.${orderId}`,
+    {
+      headers:{
+         "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0",
+        "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ4ZHVsa2FyYWJxemR3Zmpja2lzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyNDc5ODQsImV4cCI6MjA4MzgyMzk4NH0.LlWNzi9-ys6UdEqdlwe82FZ-lQTGAGKCml5cfCEt9j0"
+      }
+    }
+  );
+
+  const data = await res.json();
+
+  if (!data.length) {
+    document.getElementById("content").innerHTML = "Order not found.";
+    return;
+  }
+
+  const order = data[0];
+
+  let trackingSection = "";
+
+  if(order.tracking_id){
+    trackingSection = `
+      <br><br>
+      <strong>Tracking ID:</strong> ${order.tracking_id}
+      <br>
+      <a class="track-btn" target="_blank"
+      href="https://www.delhivery.com/track/package/${order.tracking_id}">
+      Track Shipment
+      </a>
+    `;
+  }
+
+  document.getElementById("content").innerHTML = `
+    <div class="success">Payment Successful ✅</div>
+    <br>
+    <strong>Order ID:</strong> ${order.order_id}
+    <br>
+    <strong>Amount:</strong> ₹${order.amount}
+    <br>
+    <strong>Shipment Status:</strong>
+    ${order.shipment_status || "Processing"}
+    ${trackingSection}
+  `;
+
+  localStorage.removeItem("cart");
+
+  startRedirect();
+}
+
+function startRedirect(){
+  document.getElementById("redirectMsg").style.display="block";
+  let count=5;
+  const timer=setInterval(()=>{
+    count--;
+    document.getElementById("count").innerText=count;
+    if(count===0){
+      clearInterval(timer);
+      window.location.href="/index.html";
+    }
+  },1000);
+}
+
+verify();
+
+</script>
+
+</body>
+</html>
+
