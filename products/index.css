@@ -363,3 +363,17 @@ body {
 .filter-panel{
   z-index:1000;
 }
+
+.color-options{
+  display:flex;
+  gap:6px;
+  margin:8px 0;
+}
+
+.color-dot{
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  border:1px solid #ccc;
+  cursor:pointer;
+}
